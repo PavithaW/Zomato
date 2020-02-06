@@ -12,7 +12,7 @@ export function sendData(data) {
             'user-key':API_KEY,
         }),
     })
-        .then((response) => {return response.text()})
+        .then((response) => {return response.json()})
         // .then((responseText) => {
         //     console.log(responseText);
         //   })
