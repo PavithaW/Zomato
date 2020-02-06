@@ -15,7 +15,7 @@ imageContainer: {
 nameText: {
     marginTop:200,
     color: "#ffffff",
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'left',
     justifyContent:'flex-end', 
@@ -24,7 +24,7 @@ nameText: {
 addressText: {
     marginTop:2,
     color: "#ffffff",
-    fontSize: 14,
+    fontSize: 10,
     textAlign: 'left',
     justifyContent:'flex-end',
     marginLeft:5
