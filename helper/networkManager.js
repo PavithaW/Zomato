@@ -13,10 +13,6 @@ export function sendData(data) {
         }),
     })
         .then((response) => {return response.json()})
-        // .then((responseText) => {
-        //     console.log(responseText);
-        //   })
-
         .catch((error) => {
             console.error(error);
         });

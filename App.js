@@ -2,7 +2,7 @@ import { AppLoading } from 'expo';
 import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
 import React, { useState } from 'react';
-import { Platform, StatusBar, StyleSheet, View } from 'react-native';
+import { Platform, StatusBar, StyleSheet, View, YellowBox} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 import AppNavigator from './navigation/AppNavigator';
@@ -52,6 +52,7 @@ function handleLoadingError(error) {
 
 function handleFinishLoading(setLoadingComplete) {
   setLoadingComplete(true);
+  YellowBox.ignoreWarnings(['Remote debugger']);
 }
 
 const styles = StyleSheet.create({

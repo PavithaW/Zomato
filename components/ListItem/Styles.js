@@ -31,7 +31,6 @@ addressText: {
 },
 linearGradient:{
     position: "absolute",
-    backgroundColor:"'rgba(0,0,0,0.3)",
     top: 0,
     bottom: 0,
     left: 0,

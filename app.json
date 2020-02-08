@@ -24,7 +24,14 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "buildNumber": "1",
+      "bundleIdentifier": "com.pavitha.zomato"
+    },
+    "android": {
+      "package": "com.pavitha.zomato",
+      "versionCode": 1,
+      "permissions": []
     }
   }
 }
