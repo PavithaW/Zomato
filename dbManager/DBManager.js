@@ -54,4 +54,20 @@ export const SelectFromDB = (callback) => {
         )
     })
 }
+export const SelectFavouriteRestaurents = (callback) => {
+    db.transaction(tx => {
+        tx.executeSql(
+            "select * from RestaurentInfo where favourite_status ="+1,
+            [],
+            (_, { rows: { _array } }) => {
+                var resultItemIdArr = new Array();
+            for (let i = 0; i < _array.length; i++) {
+                resultItemIdArr.push(_array[i]);
+            }
+            callback(resultItemIdArr);
+            },
+            () => console.log("error fetching")
+        )
+    })
+}
 

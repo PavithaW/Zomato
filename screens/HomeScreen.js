@@ -1,28 +1,36 @@
 import React from 'react';
+import { withNavigation } from "react-navigation";
+
 import {
   StyleSheet,
   FlatList,
   View,
 } from 'react-native';
 import ListItem from "../components/ListItem/ListItem"
-import { CreateDB, CreateTable, UpdateFavouriteStatus, SelectFromDB } from "../dbManager/DBManager"
-import { setData } from "../components/AsyncStorage/AsyncStorage"
+import { CreateDB, 
+          CreateTable, 
+          UpdateFavouriteStatus, 
+          SelectFromDB } from "../dbManager/DBManager"
 import fetchRestaurents from "../services/fetchRestaurentsData"
 
-export default class HomeScreen extends React.Component {
+class HomeScreen extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
       restaurentArray: [],
-      connection: false,
-      isFavourite: false,
-      favouriteRestaurentsArray: [],
     }
   }
 
   componentDidMount = () => {
+    const { navigation } = this.props;
+    
     this._performApp();
+    
+    this.focusListener = navigation.addListener("didFocus", () => {
+      this._reLoadRestaurentsFromDB()
+    });
+    
   }
 
   _performApp = async () => {
@@ -33,18 +41,21 @@ export default class HomeScreen extends React.Component {
   _manageAppData = async () => {
     try {
       await fetchRestaurents();
-
-      await SelectFromDB(offlineRestaurentArray => {
-        this.setState({
-          restaurentArray: offlineRestaurentArray
-        });
-
-        console.log('offlineArray:: ', this.state.restaurentArray);
-
-      })
+      await this._reLoadRestaurentsFromDB()
+      
     } catch (e) {
       console.log(e)
     }
+  }
+
+  _reLoadRestaurentsFromDB = () => {
+
+    SelectFromDB(offlineRestaurentArray => {
+      this.setState({
+        restaurentArray: offlineRestaurentArray
+      });
+
+    })
   }
 
   _setUpDb = () => {
@@ -63,41 +74,11 @@ export default class HomeScreen extends React.Component {
     console.log("Clicked::", index, "isFavourite: ", isFavourite, "item::", item)
     await UpdateFavouriteStatus(item.id,isFavourite)
     await SelectFromDB(offlineRestaurentArray => {
-
-
       console.log('offlineArray:: ', offlineRestaurentArray);
 
     })
-  //} 
-    // if(isFavourite){
-    //   this._addToFavouriteArray(item);
-    // } else {
-    //   this._removeFromFavouriteArray(item);
-    // }
-    // let favouriteRestaurent = this.state.isFavourite;
-    // this.setState({
-    //   isFavourite: !favouriteRestaurent
-    // });
-    // setIsFavourite(favouriteRestaurent)
+  }
 
-  }
-  _addToFavouriteArray = (item) => {
-    this.state.favouriteRestaurentsArray.push(item)
-    setData(this.state.favouriteRestaurentsArray)
-    console.log("Add:: ", this.state.favouriteRestaurentsArray)
-  }
-  _removeFromFavouriteArray = (item) => {
-    var itemIdToRemove = item.restaurant.id
-    for (var i = 0; i < this.state.favouriteRestaurentsArray.length; i++) {
-      var favResId = this.state.favouriteRestaurentsArray[i].restaurant.id;
-      console.log("favResId:: ", favResId, "itemIdToRemove:: ", itemIdToRemove)
-      if (favResId == itemIdToRemove) {
-        this.state.favouriteRestaurentsArray.splice(i, 1);
-      }
-    }
-    console.log("Remove:: ", this.state.favouriteRestaurentsArray)
-    setData(this.state.favouriteRestaurentsArray)
-  }
   _keyExtractor = (item, index) => index.toString();
 
   render() {
@@ -128,3 +109,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
 });
+
+export default withNavigation(HomeScreen)

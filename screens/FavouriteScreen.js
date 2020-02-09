@@ -1,30 +1,65 @@
 import React from 'react';
 import { View, FlatList,StyleSheet } from 'react-native';
-import {getData} from "../components/AsyncStorage/AsyncStorage"
+import { withNavigation } from "react-navigation";
 
-export default function FavouriteScreen() {
-var restaurents = getData();
+import { SelectFavouriteRestaurents, 
+          UpdateFavouriteStatus, 
+          SelectFromDB } from "../dbManager/DBManager"
 
-const _renderItem = ({ item, index }) => (
-  <ListItem
-    item={item}
-    index={index}
-    isOnline={this.state.connection}
-    onPressItem={this._onPressItem}
-    isFavourite = {this.state.isFavourite}
-  />
-);
-const _keyExtractor = (item, index) => index.toString();
-  return (
-    <View style={styles.container}>
-      <FlatList
-        data={restaurents}
-        renderItem={_renderItem}
-        keyExtractor={_keyExtractor}
-      />
+//export default function FavouriteScreen() {
+class FavouriteScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      favRestaurentArray: [],
+    }
+    this._loadRestaurents = this._loadRestaurents.bind(this)
+  }
+  
+  componentDidMount = () => {
+    const { navigation } = this.props;
+    this.focusListener = navigation.addListener("didFocus", () => {
+      this._loadRestaurents()
+    });
+  }
 
-    </View>
+  _loadRestaurents = async () => {
+    await SelectFavouriteRestaurents(faveRestaurentArray => {
+      this.setState({
+        favRestaurentArray: faveRestaurentArray
+      });
+    })
+
+  }
+
+  _onPressItem = async(index, item, isFavourite) => {
+    await UpdateFavouriteStatus(item.id,isFavourite)
+    await this._loadRestaurents();
+  }
+  
+  _renderItem = ({ item, index }) => (
+    <ListItem
+      item={item}
+      index={index}
+      isOnline={this.state.connection}
+      onPressItem={this._onPressItem}
+      isFavourite = {this.state.isFavourite}
+    />
   );
+  _keyExtractor = (item, index) => index.toString();
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <FlatList
+          data={this.state.favRestaurentArray}
+          renderItem={this._renderItem}
+          keyExtractor={this._keyExtractor}
+        />
+
+      </View>
+    );
+  }
 }
 
 FavouriteScreen.navigationOptions = {
@@ -37,3 +72,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
 });
+
+export default withNavigation(FavouriteScreen)
