@@ -6,6 +6,7 @@ import {
   Linking,
   AsyncStorage,
 } from 'react-native';
+import NetInfo from '@react-native-community/netinfo';
 import { sendData } from "../helper/networkManager";
 import ListItem from "../components/ListItem/ListItem"
 import { CreateDB, CreateTable, InsertValues, SelectFromDB } from "../dbManager/DBManager"
@@ -28,20 +29,26 @@ export default class HomeScreen extends React.Component {
   }
 
   checkInternet = () => {
-    Linking.canOpenURL('https://google.com').then(connection => {
-      if (!connection) {
-        this.setState({ connection: false });
-        this._manageAppData(this.state.connection)
-        alert("Offline1")
-      } else {
-        fetch('https://google.com').then(res => {
-          this.setState({ connection: res.status == 200 ? true : false })
-          this._manageAppData(this.state.connection)
-          alert(this.state.connection)
-        }
-        );
-      }
+    NetInfo.fetch().then(state => {
+      console.log('Connection type', state.type);
+      console.log('Is connected?', state.isConnected);
+      this.setState({ connection: state.isConnected });
+      this._manageAppData(this.state.connection)
     });
+    // Linking.canOpenURL('https://google.com').then(connection => {
+    //   if (!connection) {
+    //     this.setState({ connection: false });
+    //     this._manageAppData(this.state.connection)
+    //     alert("Offline1")
+    //   } else {
+    //     fetch('https://google.com').then(res => {
+    //       this.setState({ connection: res.status == 200 ? true : false })
+    //       this._manageAppData(this.state.connection)
+    //       alert(this.state.connection)
+    //     }
+    //     );
+    //   }
+    // });
   };
   _manageAppData = isOnline => {
 
