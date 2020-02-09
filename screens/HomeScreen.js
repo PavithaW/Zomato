@@ -4,12 +4,12 @@ import {
   FlatList,
   View,
   Linking,
-  Platform
+  AsyncStorage,
 } from 'react-native';
-import NetInfo from '@react-native-community/netinfo';
 import { sendData } from "../helper/networkManager";
 import ListItem from "../components/ListItem/ListItem"
 import { CreateDB, CreateTable, InsertValues, SelectFromDB } from "../dbManager/DBManager"
+import {setData} from "../components/AsyncStorage/AsyncStorage"
 
 export default class HomeScreen extends React.Component {
 
@@ -17,23 +17,27 @@ export default class HomeScreen extends React.Component {
     super(props);
     this.state = {
       restaurentArray: [],
-      connection: false
+      connection: false,
+      isFavourite: false,
+      favouriteRestaurentsArray: [],
     }
   }
 
   componentDidMount = () => {
-    this.checkInternt();
+    this.checkInternet();
   }
 
-  checkInternt = () => {
+  checkInternet = () => {
     Linking.canOpenURL('https://google.com').then(connection => {
       if (!connection) {
         this.setState({ connection: false });
         this._manageAppData(this.state.connection)
+        alert("Offline1")
       } else {
         fetch('https://google.com').then(res => {
           this.setState({ connection: res.status == 200 ? true : false })
           this._manageAppData(this.state.connection)
+          alert(this.state.connection)
         }
         );
       }
@@ -52,7 +56,7 @@ export default class HomeScreen extends React.Component {
         SelectFromDB(offlineRestaurentArray => {
           this.setState({
             restaurentArray: offlineRestaurentArray
-          });       
+          });
         })
 
       } catch (e) {
@@ -106,12 +110,43 @@ export default class HomeScreen extends React.Component {
     <ListItem
       item={item}
       index={index}
-      isOnline = {this.state.connection}
+      isOnline={this.state.connection}
       onPressItem={this._onPressItem}
+      isFavourite = {this.state.isFavourite}
     />
   );
-  _onPressItem = (index, item) => {
-    //this.props.navigation.navigate('BookDetails', { item: item });
+  _onPressItem = (index, item, isFavourite, setIsFavourite) => {
+    console.log("Clicked::", index, "isFavourite: ",isFavourite)
+    if(isFavourite){
+      this._addToFavouriteArray(item);
+    } else {
+      this._removeFromFavouriteArray(item);
+    }
+    let favouriteRestaurent = this.state.isFavourite;
+    this.setState({
+      isFavourite: !favouriteRestaurent
+    });
+    setIsFavourite(favouriteRestaurent)
+
+  }
+  _addToFavouriteArray = (item) => {
+    this.state.favouriteRestaurentsArray.push(item)
+    setData(this.state.favouriteRestaurentsArray)
+    console.log("Add:: ",this.state.favouriteRestaurentsArray)
+  }
+  _removeFromFavouriteArray = (item) => {
+    var itemIdToRemove = item.restaurant.id
+    var index;
+    for(var i=0;i<this.state.favouriteRestaurentsArray.length;i++){
+      var favResId = this.state.favouriteRestaurentsArray[i].restaurant.id;
+      console.log("favResId:: ",favResId,"itemIdToRemove:: ",itemIdToRemove)
+      if(favResId == itemIdToRemove){
+        this.state.favouriteRestaurentsArray.splice(i, 1);
+      }
+    }
+    console.log("Remove:: ",this.state.favouriteRestaurentsArray)
+    setData(this.state.favouriteRestaurentsArray)
+    
   }
   _keyExtractor = (item, index) => index.toString();
 

@@ -1,15 +1,29 @@
 import React from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { View, FlatList,StyleSheet } from 'react-native';
+import {getData} from "../components/AsyncStorage/AsyncStorage"
 
 export default function FavouriteScreen() {
+var restaurents = getData();
+
+const _renderItem = ({ item, index }) => (
+  <ListItem
+    item={item}
+    index={index}
+    isOnline={this.state.connection}
+    onPressItem={this._onPressItem}
+    isFavourite = {this.state.isFavourite}
+  />
+);
+const _keyExtractor = (item, index) => index.toString();
   return (
-    <ScrollView style={styles.container}>
-      {/**
-       * Go ahead and delete ExpoLinksView and replace it with your content;
-       * we just wanted to provide you with some helpful links.
-       */}
-      
-    </ScrollView>
+    <View style={styles.container}>
+      <FlatList
+        data={restaurents}
+        renderItem={_renderItem}
+        keyExtractor={_keyExtractor}
+      />
+
+    </View>
   );
 }
 
@@ -20,7 +34,6 @@ FavouriteScreen.navigationOptions = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 15,
     backgroundColor: '#fff',
   },
 });

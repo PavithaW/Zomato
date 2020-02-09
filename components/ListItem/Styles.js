@@ -13,7 +13,7 @@ imageContainer: {
     backgroundColor:"#f0edeb",
 },
 nameText: {
-    marginTop:200,
+    marginTop:160,
     color: "#ffffff",
     fontSize: 16,
     fontWeight: 'bold',
@@ -28,6 +28,23 @@ addressText: {
     textAlign: 'left',
     justifyContent:'flex-end',
     marginLeft:5
+},
+buttonLayout: {
+    marginTop:20,
+    width:30,
+    marginRight:10,
+    alignSelf:'flex-end',
+    alignItems:'center',
+    justifyContent:'center',
+    height:30,
+    backgroundColor: "rgba(0,0,0,0)",
+},
+buttonText: {
+    color: "#ffffff",
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center', 
+    marginRight:5
 },
 linearGradient:{
     position: "absolute",
