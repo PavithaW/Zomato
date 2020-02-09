@@ -9,18 +9,26 @@ export const CreateDB = (dbname) => {
 export const CreateTable = () => {
     db.transaction(tx => {
         tx.executeSql(
-            "create table if not exists RestaurentInfo (id integer primary key not null, name text, address text, featured_image text);",
+            "create table if not exists RestaurentInfo (id integer primary key not null, name text, address text, featured_image text,favourite_status boolean);",
             []
         );
     })
 }
-export const InsertValues = (id, name, address, featured_image) => {
+export const InsertValues = (id, name, address, featured_image, favourite_status) => {
     db.transaction(tx => {
         tx.executeSql(
-            "insert into RestaurentInfo (id, name, address, featured_image) values (?, ?, ?,?)",
-            [id, name, address, featured_image]
+            "insert into RestaurentInfo (id, name, address, featured_image, favourite_status) values (?, ?, ?, ?, ?)",
+            [id, name, address, featured_image,favourite_status]
         );
     });
+}
+export const UpdateFavouriteStatus = (id,favourite_status) => {
+    db.transaction(tx => {
+        tx.executeSql(
+            "update RestaurentInfo set favourite_status = "+ favourite_status +" where id ="+ id
+        );
+    });
+
 }
 export const DeleteRecords = () => {
     db.transaction(tx => {

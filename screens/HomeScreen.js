@@ -5,7 +5,7 @@ import {
   View,
 } from 'react-native';
 import ListItem from "../components/ListItem/ListItem"
-import { CreateDB, CreateTable, InsertValues, SelectFromDB } from "../dbManager/DBManager"
+import { CreateDB, CreateTable, UpdateFavouriteStatus, SelectFromDB } from "../dbManager/DBManager"
 import { setData } from "../components/AsyncStorage/AsyncStorage"
 import fetchRestaurents from "../services/fetchRestaurentsData"
 
@@ -58,9 +58,17 @@ export default class HomeScreen extends React.Component {
       onPressItem={this._onPressItem}
     />
   );
-  _onPressItem = (index, item, isFavourite) => {
-    console.log("Clicked::", index, "isFavourite: ", isFavourite, "item::", item)
 
+  _onPressItem = async(index, item, isFavourite) => {
+    console.log("Clicked::", index, "isFavourite: ", isFavourite, "item::", item)
+    await UpdateFavouriteStatus(item.id,isFavourite)
+    await SelectFromDB(offlineRestaurentArray => {
+
+
+      console.log('offlineArray:: ', offlineRestaurentArray);
+
+    })
+  //} 
     // if(isFavourite){
     //   this._addToFavouriteArray(item);
     // } else {

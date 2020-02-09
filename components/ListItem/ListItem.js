@@ -6,14 +6,14 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default ListItem = props => {
 
-    const [isFavourite, setIsFavourite] = useState(false);
+    const [isFavourite, setIsFavourite] = useState(props.item.favourite_status);
 
-    let restaurentItem
+    let restaurentItem;
     let location;
 
     restaurentItem = props.item;
     location = restaurentItem.address;
-
+    
     let Image_URL;
     if (restaurentItem.featured_image != "") {
         Image_URL = { uri: restaurentItem.featured_image, cache: 'force-cache' };

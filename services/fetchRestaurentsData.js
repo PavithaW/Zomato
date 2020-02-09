@@ -50,7 +50,8 @@ const _saveRestaurentToDb = DataArray => {
         let restaurentName = restaurant.name;
         let restaurentAddress = restaurant.location.address;
         let restaurentImage = restaurant.featured_image;
+        let favouriteStatus = false
 
-        InsertValues(restaurentId, restaurentName, restaurentAddress, restaurentImage);
+        InsertValues(restaurentId, restaurentName, restaurentAddress, restaurentImage, favouriteStatus);
     }
 }
