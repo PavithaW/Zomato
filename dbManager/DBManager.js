@@ -22,6 +22,14 @@ export const InsertValues = (id, name, address, featured_image) => {
         );
     });
 }
+export const DeleteRecords = () => {
+    db.transaction(tx => {
+        tx.executeSql(
+            "delete from RestaurentInfo"
+        );
+    });
+
+}
 export const SelectFromDB = (callback) => {
     db.transaction(tx => {
         tx.executeSql(
