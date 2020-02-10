@@ -6,19 +6,21 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default ListItem = props => {
 
+    // use a hook instead of state
     const [isFavourite, setIsFavourite] = useState(props.item.favourite_status);
 
+    const DEFAULT_IMAGE_URL = '../../assets/images/default.jpg'
     let restaurentItem;
     let location;
 
     restaurentItem = props.item;
     location = restaurentItem.address;
-    
+
     let Image_URL;
     if (restaurentItem.featured_image != "") {
         Image_URL = { uri: restaurentItem.featured_image, cache: 'force-cache' };
     } else {
-        Image_URL = require('../../assets/images/default.jpg')
+        Image_URL = require(DEFAULT_IMAGE_URL)
     }
 
     const handleIsFavouriteButtonClick = () => {

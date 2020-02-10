@@ -7,10 +7,12 @@ import {
   View,
 } from 'react-native';
 import ListItem from "../components/ListItem/ListItem"
-import { CreateDB, 
-          CreateTable, 
-          UpdateFavouriteStatus, 
-          SelectFromDB } from "../dbManager/DBManager"
+import {
+  CreateDB,
+  CreateTable,
+  UpdateFavouriteStatus,
+  SelectFromDB
+} from "../dbManager/DBManager"
 import fetchRestaurents from "../services/fetchRestaurentsData"
 
 class HomeScreen extends React.Component {
@@ -24,25 +26,28 @@ class HomeScreen extends React.Component {
 
   componentDidMount = () => {
     const { navigation } = this.props;
-    
+
     this._performApp();
-    
+
+    /* fetch restaurents from db with latest favourite status, when the component is focused */
     this.focusListener = navigation.addListener("didFocus", () => {
       this._reLoadRestaurentsFromDB()
     });
-    
+
   }
 
   _performApp = async () => {
+
     await this._setUpDb();
     await this._manageAppData();
   }
 
   _manageAppData = async () => {
+
     try {
       await fetchRestaurents();
       await this._reLoadRestaurentsFromDB()
-      
+
     } catch (e) {
       console.log(e)
     }
@@ -70,13 +75,11 @@ class HomeScreen extends React.Component {
     />
   );
 
-  _onPressItem = async(index, item, isFavourite) => {
-    console.log("Clicked::", index, "isFavourite: ", isFavourite, "item::", item)
-    await UpdateFavouriteStatus(item.id,isFavourite)
-    await SelectFromDB(offlineRestaurentArray => {
-      console.log('offlineArray:: ', offlineRestaurentArray);
+  _onPressItem = async (index, item, isFavourite) => {
 
-    })
+    /* update the restaurent in db with the new favourite status */
+    await UpdateFavouriteStatus(item.id, isFavourite)
+
   }
 
   _keyExtractor = (item, index) => index.toString();

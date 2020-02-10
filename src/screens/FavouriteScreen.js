@@ -1,12 +1,12 @@
 import React from 'react';
-import { View, FlatList,StyleSheet } from 'react-native';
+import { View, FlatList, StyleSheet } from 'react-native';
 import { withNavigation } from "react-navigation";
 
-import { SelectFavouriteRestaurents, 
-          UpdateFavouriteStatus, 
-          SelectFromDB } from "../dbManager/DBManager"
+import {
+  SelectFavouriteRestaurents,
+  UpdateFavouriteStatus
+} from "../dbManager/DBManager"
 
-//export default function FavouriteScreen() {
 class FavouriteScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -15,7 +15,7 @@ class FavouriteScreen extends React.Component {
     }
     this._loadRestaurents = this._loadRestaurents.bind(this)
   }
-  
+
   componentDidMount = () => {
     const { navigation } = this.props;
     this.focusListener = navigation.addListener("didFocus", () => {
@@ -32,18 +32,18 @@ class FavouriteScreen extends React.Component {
 
   }
 
-  _onPressItem = async(index, item, isFavourite) => {
-    await UpdateFavouriteStatus(item.id,isFavourite)
+  _onPressItem = async (index, item, isFavourite) => {
+    await UpdateFavouriteStatus(item.id, isFavourite)
     await this._loadRestaurents();
   }
-  
+
   _renderItem = ({ item, index }) => (
     <ListItem
       item={item}
       index={index}
       isOnline={this.state.connection}
       onPressItem={this._onPressItem}
-      isFavourite = {this.state.isFavourite}
+      isFavourite={this.state.isFavourite}
     />
   );
   _keyExtractor = (item, index) => index.toString();
